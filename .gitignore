@@ -1,0 +1,18 @@
+# secrets
+gcp-key.json
+*-key.json
+.env
+profiles.yml
+
+# python
+.venv/
+__pycache__/
+.ipynb_checkpoints/
+
+# generated data (anyone can recreate it with the simulator)
+data/
+
+# dbt
+dbt_project/target/
+dbt_project/dbt_packages/
+dbt_project/logs/
