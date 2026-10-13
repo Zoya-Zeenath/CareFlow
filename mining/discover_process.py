@@ -32,7 +32,7 @@ def load_from_bigquery() -> pd.DataFrame:
     sql = f"""
         SELECT case_id, activity_name, timestamp
         FROM `{EVENT_LOG_TABLE}`
-        ORDER BY case_id, timestamp
+        ORDER BY case_id, event_seq
     """
     return client.query(sql).to_dataframe()
 

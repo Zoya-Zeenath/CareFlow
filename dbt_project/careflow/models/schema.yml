@@ -42,3 +42,28 @@ models:
 
   - name: event_log_lifecycle
     description: Start and complete events, used for wait-time vs service-time analysis.
+
+  - name: activity_durations
+    description: One row per activity instance with queue wait and service time in minutes.
+    columns:
+      - name: case_id
+        tests: [not_null]
+      - name: wait_minutes
+        tests: [not_null]
+      - name: service_minutes
+        tests: [not_null]
+
+  - name: transition_stats
+    description: Average wait/service/transition time for every node-to-node hand-off.
+
+  - name: bottleneck_summary
+    description: Activities ranked by total hours patients spend waiting for them.
+    columns:
+      - name: activity_name
+        tests: [not_null, unique]
+
+  - name: case_summary
+    description: One row per patient with stay length, waiting time and loop-back flag.
+    columns:
+      - name: case_id
+        tests: [not_null, unique]
