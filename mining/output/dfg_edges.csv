@@ -1,0 +1,27 @@
+,,count
+Admission,Treatment,253
+Arrival,Registration,4921
+Discharge,Doctor Consultation,272
+Discharge,Lab Test,16
+Discharge,Treatment,1936
+Discharge,X-Ray,9
+Doctor Consultation,Admission,32
+Doctor Consultation,Discharge,1216
+Doctor Consultation,Lab Test,1069
+Doctor Consultation,Treatment,991
+Doctor Consultation,X-Ray,2294
+Lab Test,Admission,188
+Lab Test,Discharge,660
+Lab Test,Treatment,806
+Re-Triage,Discharge,11
+Re-Triage,Doctor Consultation,942
+Registration,Triage,4921
+Treatment,Admission,254
+Treatment,Discharge,1902
+Triage,Discharge,261
+Triage,Doctor Consultation,4660
+X-Ray,Admission,33
+X-Ray,Discharge,364
+X-Ray,Lab Test,585
+X-Ray,Re-Triage,953
+X-Ray,Treatment,359

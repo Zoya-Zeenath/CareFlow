@@ -1,0 +1,10 @@
+version: 2
+
+sources:
+  - name: careflow_raw
+    description: Raw simulated EHR event logs loaded from the Python generator.
+    database: careflow-511009
+    schema: careflow_raw
+    tables:
+      - name: ehr_events_raw
+        description: One row per start/complete event for each patient activity.

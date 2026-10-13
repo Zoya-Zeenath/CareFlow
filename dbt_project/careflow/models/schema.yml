@@ -1,0 +1,44 @@
+version: 2
+
+models:
+  - name: stg_ehr_events
+    description: Cleaned, de-duplicated EHR events.
+    columns:
+      - name: case_id
+        tests: [not_null]
+      - name: activity_name
+        tests:
+          - not_null
+          - accepted_values:
+              values: ['Arrival', 'Registration', 'Triage', 'Doctor Consultation',
+                       'X-Ray', 'Lab Test', 'Treatment', 'Re-Triage',
+                       'Discharge', 'Admission']
+      - name: lifecycle
+        tests:
+          - not_null
+          - accepted_values:
+              values: ['start', 'complete']
+      - name: event_timestamp
+        tests: [not_null]
+      - name: severity
+        tests:
+          - accepted_values:
+              values: [1, 2, 3, 4, 5]
+              quote: false
+
+  - name: event_log
+    description: >
+      Process-mining event log (Case_ID, Activity_Name, Timestamp).
+      Completed activities only, ordered per patient.
+    columns:
+      - name: case_id
+        tests: [not_null]
+      - name: activity_name
+        tests: [not_null]
+      - name: timestamp
+        tests: [not_null]
+      - name: event_seq
+        tests: [not_null]
+
+  - name: event_log_lifecycle
+    description: Start and complete events, used for wait-time vs service-time analysis.
