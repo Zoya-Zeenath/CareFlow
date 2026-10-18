@@ -1,0 +1,5 @@
+scenario,avg_stay_min,p90_stay_min,avg_xray_wait_min,avg_total_wait_min,sent_back,stay_change_vs_baseline,stay_change_std_across_seeds,total_wait_change_vs_baseline
+baseline,93.1,162.3,37.3,28.0,870.2,0.0,0.0,0.0
+fix_paperwork,85.9,145.4,39.4,24.4,0.0,-7.2,3.8,-3.5
+second_xray,78.9,130.5,2.0,13.4,880.3,-14.2,3.2,-14.6
+both,70.1,113.6,2.2,8.7,0.0,-22.9,3.3,-19.3
