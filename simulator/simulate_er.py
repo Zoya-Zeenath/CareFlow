@@ -53,6 +53,9 @@ ARRIVALS_PER_HOUR = [
 # Severity (ESI): 1 = critical ... 5 = minor. Mostly 3s in real ERs.
 SEVERITY_WEIGHTS = {1: 0.03, 2: 0.15, 3: 0.42, 4: 0.28, 5: 0.12}
 
+# Defaults (the what-if runner overrides these per scenario)
+DEFAULT_XRAY_CAPACITY = CAPACITY["xray"]
+
 # THE HIDDEN INEFFICIENCY (matches the project doc):
 # After X-Ray, some patients are sent BACK to triage because the
 # intake paperwork form was incomplete.
@@ -60,6 +63,7 @@ PAPERWORK_LOOPBACK_PROB = 0.40
 # ...and it only happens to patients who had an X-ray, mostly when the
 # form was missed at registration:
 MISSING_FORM_PROB = 0.40
+DEFAULT_LOOPBACK_PROB = PAPERWORK_LOOPBACK_PROB
 
 
 # ----------------------------------------------------------------------
@@ -168,22 +172,38 @@ def arrival_process(env, er: ER, days: int):
 
 
 # ----------------------------------------------------------------------
-# 5. MAIN
+# 5. RUN + MAIN
 # ----------------------------------------------------------------------
+def run(days: int = 30, seed: int = 42, loopback_prob=None, xray_capacity=None) -> pd.DataFrame:
+    """Run one simulation and return the event log as a DataFrame.
+    loopback_prob=0 -> the paperwork fix (nobody is sent back to Triage)
+    xray_capacity=2 -> a second X-ray machine"""
+    global PAPERWORK_LOOPBACK_PROB
+    PAPERWORK_LOOPBACK_PROB = DEFAULT_LOOPBACK_PROB if loopback_prob is None else loopback_prob
+    CAPACITY["xray"] = DEFAULT_XRAY_CAPACITY if xray_capacity is None else xray_capacity
+
+    random.seed(seed)
+    env = simpy.Environment()
+    er = ER(env)
+    env.process(arrival_process(env, er, days))
+    env.run()                      # run until all patients are done
+    return pd.DataFrame(er.events).sort_values(["timestamp", "case_id"]).reset_index(drop=True)
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--days", type=int, default=30)
     ap.add_argument("--seed", type=int, default=42)
     ap.add_argument("--out", default="../data/ehr_events_raw.csv")
+    ap.add_argument("--no-loopback", action="store_true",
+                    help="what-if: paperwork fixed, nobody is sent back to Triage")
+    ap.add_argument("--xray-capacity", type=int, default=None,
+                    help="what-if: number of X-ray machines (default 1)")
     args = ap.parse_args()
 
-    random.seed(args.seed)
-    env = simpy.Environment()
-    er = ER(env)
-    env.process(arrival_process(env, er, args.days))
-    env.run()                      # run until all patients are done
-
-    df = pd.DataFrame(er.events).sort_values(["timestamp", "case_id"]).reset_index(drop=True)
+    df = run(args.days, args.seed,
+             loopback_prob=0.0 if args.no_loopback else None,
+             xray_capacity=args.xray_capacity)
     df.to_csv(args.out, index=False)
     print(f"Wrote {len(df):,} events for {df.case_id.nunique():,} patients -> {args.out}")
 
