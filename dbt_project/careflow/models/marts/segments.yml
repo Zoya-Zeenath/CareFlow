@@ -1,0 +1,15 @@
+version: 2
+
+models:
+  - name: transition_segments
+    description: >
+      Hand-offs (prev_activity -> next_activity) split by age group, severity, gender and
+      the resource that handled the next step. Stores sums and counts so Power BI can
+      recompute correct averages under any filter.
+    columns:
+      - name: prev_activity
+        tests: [not_null]
+      - name: next_activity
+        tests: [not_null]
+      - name: transitions
+        tests: [not_null]
