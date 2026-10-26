@@ -9,7 +9,6 @@ import os
 import pandas as pd
 from google.cloud import bigquery
 
-# --- settings: change only if your paths/names differ -------------------
 KEY_PATH = r"D:\secrets\gcp-key.json"          # key lives OUTSIDE the repo
 CSV_PATH = r"D:\careflow\data\ehr_events_raw.csv"
 
